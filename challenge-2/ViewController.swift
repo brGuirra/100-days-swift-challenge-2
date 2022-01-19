@@ -60,9 +60,11 @@ class ViewController: UITableViewController {
             if let shoppingListItens = self?.shoppingListItens {
                 if shoppingListItens.isEmpty {
                     self?.showErrorMessage(title: "Can't clear", message: "The list is already empty")
+                    return
                 }
                 
-                return
+                self?.shoppingListItens.removeAll(keepingCapacity: true)
+                self?.tableView.reloadData()
             }
         }
         
