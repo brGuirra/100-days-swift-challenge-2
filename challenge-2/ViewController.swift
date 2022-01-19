@@ -52,26 +52,74 @@ class ViewController: UITableViewController {
     
     
     @objc func clearList() {
-        
     }
     
     @objc func shareList() {
 
     }
     
+    func promptForListItem() {
+        let ac = UIAlertController(title: "Add an item", message: nil, preferredStyle: .alert)
+        
+        ac.addTextField()
+        
+        let submitItem = UIAlertAction(title: "Add", style: .default) {
+            [weak self, weak ac] _ in
+            
+            guard let listItem = ac?.textFields?[0].text?.lowercased() else { return }
+            
+            if listItem.isEmpty {
+                self?.showErrorMessage(title: "Can't add", message: "You have to type something to add in the list")
+                return
+            }
+            
+            if let shoppingListItens = self?.shoppingListItens {
+                if shoppingListItens.contains(listItem) {
+                    self?.showErrorMessage(title: "Can't add", message: "The item already exists in your list")
+                    return
+                }
+            }
+            
+            self?.shoppingListItens.insert(listItem, at: 0)
+            
+            let indexPath = IndexPath(row: 0, section: 0)
+            self?.tableView.insertRows(at: [indexPath], with: .automatic)
+            
+        }
+        
+        let cancelSubmition = UIAlertAction(title: "Cancel", style: .destructive)
+        
+        ac.addAction(cancelSubmition)
+        ac.addAction(submitItem)
+        
+        present(ac, animated: true)
+    }
+    
+    func showErrorMessage(title: String, message: String) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(ac, animated: true)
+    }
+    
     func addItem() -> UIAction {
-        return UIAction() { _ in
+        return UIAction() {
+            [weak self] _ in
+            
+            self?.promptForListItem()
         }
     }
     
     func createButton() -> UIButton {
         let button = UIButton(type: .custom)
+        
         button.frame = CGRect(x: 160, y: 160, width: 80, height: 80)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.setImage(UIImage(systemName: "plus.circle.fill") , for: .normal)
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
         button.addAction(addItem(), for: .touchUpInside)
+        
         return button
     }
 }
