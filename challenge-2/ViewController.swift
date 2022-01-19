@@ -77,7 +77,18 @@ class ViewController: UITableViewController {
     }
     
     @objc func shareList() {
-
+        if shoppingListItens.isEmpty {
+            showErrorMessage(title: "Empty list", message: "Can't share an empty list, please insert some items")
+            
+            return
+        }
+        
+        let list = shoppingListItens.joined(separator: "\n")
+        
+        let vc = UIActivityViewController(activityItems: [list], applicationActivities: [])
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        
+        present(vc, animated: true)
     }
     
     func promptForListItem() {
