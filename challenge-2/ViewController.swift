@@ -52,6 +52,26 @@ class ViewController: UITableViewController {
     
     
     @objc func clearList() {
+        let ac = UIAlertController(title: "Clear list", message: nil, preferredStyle: .alert)
+        
+        let clearAction = UIAlertAction(title: "Clear", style: .default) {
+            [weak self] _ in
+            
+            if let shoppingListItens = self?.shoppingListItens {
+                if shoppingListItens.isEmpty {
+                    self?.showErrorMessage(title: "Can't clear", message: "The list is already empty")
+                }
+                
+                return
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        
+        ac.addAction(clearAction)
+        ac.addAction(cancelAction)
+        
+        present(ac, animated: true)
     }
     
     @objc func shareList() {
@@ -63,7 +83,7 @@ class ViewController: UITableViewController {
         
         ac.addTextField()
         
-        let submitItem = UIAlertAction(title: "Add", style: .default) {
+        let submitAction = UIAlertAction(title: "Add", style: .default) {
             [weak self, weak ac] _ in
             
             guard let listItem = ac?.textFields?[0].text?.lowercased() else { return }
@@ -87,10 +107,10 @@ class ViewController: UITableViewController {
             
         }
         
-        let cancelSubmition = UIAlertAction(title: "Cancel", style: .destructive)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
         
-        ac.addAction(cancelSubmition)
-        ac.addAction(submitItem)
+        ac.addAction(submitAction)
+        ac.addAction(cancelAction)
         
         present(ac, animated: true)
     }
